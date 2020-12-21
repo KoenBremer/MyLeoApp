@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">My Leo</string>
+    <string name="page_title">Leo App</string>
+    <string name="updated">updated</string>
+    <string name="connection_error">connection error</string>
+    <string name="xml_error">xml error</string>
 </resources>
