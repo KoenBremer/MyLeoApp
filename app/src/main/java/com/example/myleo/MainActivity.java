@@ -20,6 +20,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends Activity {
@@ -36,6 +37,9 @@ public class MainActivity extends Activity {
     public static boolean refreshDisplay = true;
     public static String sPref = ANY;
 
+    public List<Event> events = Collections.<Event>emptyList();
+
+    // Download and parse the xml feed into a list
     @SuppressLint("StaticFieldLeak")
     private class DownloadXmlTask extends AsyncTask<String, Void, String> {
 
@@ -63,7 +67,7 @@ public class MainActivity extends Activity {
         InputStream stream = null;
         // Instantiate the parser
         XmlParser XmlParser = new XmlParser();
-        List<Event> events = null;
+        //List<Event> events = null;
         String title = null;
         String url = null;
         String summary = null;
@@ -121,7 +125,7 @@ public class MainActivity extends Activity {
         return conn.getInputStream();
     }
 
-
+    // At creation of the activity, the view is set to main view and loadPage is called
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,8 +133,11 @@ public class MainActivity extends Activity {
         loadPage();
     }
 
-    // Uses AsyncTask to download the XML feed from stackoverflow.com.
+    // Uses AsyncTask to download the XML feed from given url
     public void loadPage() {
+        if (!events.isEmpty()) {
+            events.clear();
+        }
 
         if ((sPref.equals(ANY)) && (wifiConnected || mobileConnected)) {
             new DownloadXmlTask().execute(URL);
