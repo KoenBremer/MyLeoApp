@@ -1,6 +1,7 @@
 package com.example.myleo;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -23,7 +24,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     public static final String WIFI = "Wi-Fi";
     public static final String ANY = "Any";
@@ -79,8 +80,7 @@ public class MainActivity extends Activity {
        // boolean pref = sharedPrefs.getBoolean("summaryPref", false);
 
         StringBuilder htmlString = new StringBuilder();
-        htmlString.append("<h3>").append(getResources().getString(R.string.page_title)).append("</h3>");
-        htmlString.append("<em>").append(getResources().getString(R.string.updated)).append(" ").append(formatter.format(rightNow.getTime())).append("</em>");
+        //htmlString.append("<h3>").append(getResources().getString(R.string.page_title)).append("</h3>");
 
         try {
             stream = downloadUrl(urlString);
@@ -108,6 +108,7 @@ public class MainActivity extends Activity {
               //  htmlString.append(Event.summary);
             //}
         }
+        htmlString.append("<em>").append(getResources().getString(R.string.updated)).append(" ").append(formatter.format(rightNow.getTime())).append("</em>");
         return htmlString.toString();
     }
 
@@ -131,6 +132,18 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         loadPage();
+
+        SwipeRefreshLayout pullToRefresh = findViewById(R.id.pullToRefresh);
+        pullToRefresh.setOnRefreshListener(
+                () -> {
+                    Log.i("refresh", "onRefresh called from SwipeRefreshLayout");
+
+                    // This method performs the actual data-refresh operation.
+                    // The method calls setRefreshing(false) when it's finished.
+                    loadPage();
+                }
+        );
+
     }
 
     // Uses AsyncTask to download the XML feed from given url
